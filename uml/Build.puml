@@ -1,0 +1,28 @@
+@startuml
+title Схема сборки: статическая библиотека (версия v0.1)
+left to right direction
+skinparam shadowing false
+skinparam defaultFontSize 13
+
+artifact "include/Polynomial.h\n(объявление класса)" as H
+artifact "src/Polynomial.cpp\n(реализация класса)" as S
+artifact "client/client.cpp\n(клиентский код)" as C
+
+artifact "build/Polynomial.o" as PO
+artifact "build/client.o" as CO
+artifact "build/liblab3.a\nстатическая библиотека" as LIB
+artifact "build/test_static.exe\nтестовая программа" as EXE
+
+S --> PO : g++ -c
+H ..> PO : #include
+PO --> LIB : ar rcs
+C --> CO : g++ -c
+H ..> CO : #include
+CO --> EXE : g++ -static
+LIB --> EXE : код копируется\nвнутрь exe
+
+note bottom of EXE
+  Библиотека нужна только при сборке:
+  готовая программа запускается без неё.
+end note
+@enduml
